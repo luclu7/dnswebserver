@@ -10,7 +10,7 @@ jobs:
     steps:
       -
         name: test
-        run: pwd; ls -lash; ls -lash ../; git clone github.com/luclu7/dnswebserver .
+        run: pwd; ls -lash; ls -lash ../; git clone https://github.com/luclu7/dnswebserver .
       -
         name: Docker build
         run: docker build -t luclu7/dnswebserver:latest .
