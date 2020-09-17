@@ -10,10 +10,10 @@ jobs:
     steps:
       -
         name: test
-        command: pwd; ls -lash
+        run: pwd; ls -lash
       -
         name: Docker build
-        command: docker build -t luclu7/dnswebserver:latest .
+        run: docker build -t luclu7/dnswebserver:latest .
       -
         name: Build and push
         id: docker_build
