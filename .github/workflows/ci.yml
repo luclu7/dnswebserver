@@ -15,6 +15,14 @@ jobs:
         name: Docker build
         run: docker build -t luclu7/dnswebserver:latest .
      
+      - 
+        name: Docker login
+        run: docker login --username luclu7 --password ${{ secrets.DOCKERHUB_TOKEN }}
+
+      -
+        name: push image
+        run: docker push luclu7/dnswebserver:latest
+
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
