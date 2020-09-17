@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: test
-        run: pwd; ls -lash; ls -lash ../; git clone https://github.com/luclu7/dnswebserver .
+        name: Clone repo
+        run: git clone https://github.com/luclu7/dnswebserver .
       -
         name: Docker build
         run: docker build -t luclu7/dnswebserver:latest .
@@ -22,8 +22,3 @@ jobs:
       -
         name: push image
         run: docker push luclu7/dnswebserver:latest
-
-      -
-        name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-
