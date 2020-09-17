@@ -34,7 +34,9 @@ type GetAXFR struct {
 	Server  string `json:"server"`
 }
 
-func handlerSendAXFR(w http.ResponseWriter, r *http.Requst)
+func handlerSendAXFR(w http.ResponseWriter, r *http.Request) {
+	// TODO
+}
 
 func handlerGetAXFR(w http.ResponseWriter, r *http.Request) {
 	vars := r.URL.Query()

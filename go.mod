@@ -1,4 +1,4 @@
-module dnswebtest
+module github.com/luclu7/dnswebserver
 
 go 1.14
 
