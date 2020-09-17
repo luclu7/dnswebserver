@@ -11,5 +11,4 @@ RUN go build
 EXPOSE 8080
 
 # Run the executable
-CMD ["./dnswebtest"]
-
+CMD ["./dnswebserver"]
