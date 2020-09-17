@@ -10,17 +10,11 @@ jobs:
     steps:
       -
         name: test
-        run: pwd; ls -lash; ls -lash ../
+        run: pwd; ls -lash; ls -lash ../; git clone github.com/luclu7/dnswebserver .
       -
         name: Docker build
         run: docker build -t luclu7/dnswebserver:latest .
-      -
-        name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: luclu7/dnswebserver:latest
+     
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
