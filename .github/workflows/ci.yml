@@ -10,7 +10,7 @@ jobs:
     steps:
       -
         name: test
-        run: pwd; ls -lash
+        run: pwd; ls -lash; ls -lash ../
       -
         name: Docker build
         run: docker build -t luclu7/dnswebserver:latest .
