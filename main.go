@@ -106,7 +106,7 @@ func handlerSendRecords(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// return a JSON success
-	fmt.Fprintf(w, `{"sucess":true}`)
+	fmt.Fprintf(w, `{"success":true}`)
 
 	// poor man's log
 	forwarded := r.Header.Get("X-FORWARDED-FOR")
