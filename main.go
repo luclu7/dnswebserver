@@ -42,7 +42,7 @@ func sendRecordsViaRFC2136(RRsToAdd []dns.RR, secret map[string]string, key stri
 	c.TsigSecret = secret
 
 	// Send the query
-	reply, _, err := c.Exchange(m, "127.0.0.1:53")
+	reply, _, err := c.Exchange(m, server)
 	if err != nil {
 		return fmt.Errorf("DNS update failed: %w", err)
 	}
