@@ -27,11 +27,12 @@ func getRecordsViaAXFR(secret map[string]string, key string, domain string, algo
 	return a
 }
 
-func sendRecordsViaRFC2136(RRsToAdd []dns.RR, secret map[string]string, key string, domain string, algo string, server string) error {
+func sendRecordsViaRFC2136(RRsToAdd []dns.RR, RRsToRemove []dns.RR, secret map[string]string, key string, domain string, algo string, server string) error {
 	// initialization
 	m := new(dns.Msg)
 	m.SetUpdate(dns.Fqdn(domain))
 	m.Insert(RRsToAdd)
+	m.RemoveRRset(RRsToRemove)
 
 	// Setup client
 	c := &dns.Client{}
@@ -73,6 +74,13 @@ type addNewRecords struct {
 		Target string `json:"target"`
 		TTL    string `json:"ttl"`
 	} `json:"newRecords"`
+	RemRecords []struct {
+		ID     int    `json:"id"`
+		Name   string `json:"name"`
+		Type   string `json:"type"`
+		Target string `json:"target"`
+		TTL    int    `json:"ttl"`
+	} `json:"remRecords"`
 }
 
 func handlerSendRecords(w http.ResponseWriter, r *http.Request) {
@@ -96,12 +104,21 @@ func handlerSendRecords(w http.ResponseWriter, r *http.Request) {
 	server := request.Server
 
 	var records []dns.RR
+	var toBeRemoved []dns.RR
 	for _, currRecord := range request.NewRecords {
 		textForNewRecord := currRecord.Name + " " + currRecord.TTL + " " + currRecord.Type + " " + currRecord.Target
 		newRecord, _ := dns.NewRR(textForNewRecord)
 		records = append(records, newRecord)
 	}
-	err = sendRecordsViaRFC2136(records, secret, key, domain, algo, server)
+
+	for _, currRecord := range request.RemRecords {
+		textForNewRecord := currRecord.Name + " " + currRecord.TTL + " " + currRecord.Type + " " + currRecord.Target
+		newRecord, _ := dns.NewRR(textForNewRecord)
+		toBeRemoved = append(toBeRemoved, newRecord)
+
+	}
+
+	err = sendRecordsViaRFC2136(records, toBeRemoved, secret, key, domain, algo, server)
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
