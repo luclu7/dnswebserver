@@ -79,7 +79,7 @@ type addNewRecords struct {
 		Name   string `json:"name"`
 		Type   string `json:"type"`
 		Target string `json:"target"`
-		TTL    int    `json:"ttl"`
+		TTL    string `json:"ttl"`
 	} `json:"remRecords"`
 }
 
