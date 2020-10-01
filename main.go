@@ -7,6 +7,7 @@ import (
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -41,7 +42,7 @@ func sendRecordsViaRFC2136(RRsToAdd []dns.RR, RRsToRemove []dns.RR, secret map[s
 	// TSIG authentication / msg signing
 	m.SetTsig(dns.Fqdn(key), dns.Fqdn(algo), 300, time.Now().Unix())
 	c.TsigSecret = secret
-
+	fmt.Println(m)
 	// Send the query
 	reply, _, err := c.Exchange(m, server)
 	if err != nil {
@@ -72,14 +73,14 @@ type addNewRecords struct {
 		Name   string `json:"name"`
 		Type   string `json:"type"`
 		Target string `json:"target"`
-		TTL    string `json:"ttl"`
+		TTL    int    `json:"ttl"`
 	} `json:"newRecords"`
 	RemRecords []struct {
 		ID     int    `json:"id"`
 		Name   string `json:"name"`
 		Type   string `json:"type"`
 		Target string `json:"target"`
-		TTL    string `json:"ttl"`
+		TTL    int    `json:"ttl"`
 	} `json:"remRecords"`
 }
 
@@ -92,7 +93,10 @@ func handlerSendRecords(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(testttb, &request)
 	if err != nil {
 		fmt.Println(err)
-		fmt.Fprintf(w, "JSON is not valid.")
+		//fmt.Fprintf(w, "JSON is not valid.")
+		//fmt.Println("JSON is not valid.")
+		fmt.Fprintf(w, `{"success": false,"error":"Invalid JSON"}`)
+		return
 	}
 
 	// actual "code"
@@ -106,13 +110,13 @@ func handlerSendRecords(w http.ResponseWriter, r *http.Request) {
 	var records []dns.RR
 	var toBeRemoved []dns.RR
 	for _, currRecord := range request.NewRecords {
-		textForNewRecord := currRecord.Name + " " + currRecord.TTL + " " + currRecord.Type + " " + currRecord.Target
+		textForNewRecord := currRecord.Name + " " + strconv.Itoa(currRecord.TTL) + " " + currRecord.Type + " " + currRecord.Target
 		newRecord, _ := dns.NewRR(textForNewRecord)
 		records = append(records, newRecord)
 	}
 
 	for _, currRecord := range request.RemRecords {
-		textForNewRecord := currRecord.Name + " " + currRecord.TTL + " " + currRecord.Type + " " + currRecord.Target
+		textForNewRecord := currRecord.Name + " " + strconv.Itoa(currRecord.TTL) + " " + currRecord.Type + " " + currRecord.Target
 		newRecord, _ := dns.NewRR(textForNewRecord)
 		toBeRemoved = append(toBeRemoved, newRecord)
 
