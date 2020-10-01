@@ -197,17 +197,16 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		ip = r.RemoteAddr
 	}
-	fmt.Println("GET / from " + ip)
 	log.WithFields(log.Fields{
 		"IP": ip,
 	}).Info("GET /")
 }
 
 func main() {
-	fmt.Println("Hello world!")
+	fmt.Println("Starting on :8080...")
 	r := mux.NewRouter()
 	r.HandleFunc("/", mainHandler)
 	r.HandleFunc("/getRecords", handlerGetAXFR).Methods("GET")
 	r.HandleFunc("/addRecords", handlerSendRecords).Methods("GET")
-	http.ListenAndServe(":8080", r)
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
